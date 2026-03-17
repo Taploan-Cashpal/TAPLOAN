@@ -244,27 +244,38 @@
     </div>
 
 <script>
-    // 🔴 SETTINGS: Update these values
+    // 🔴 SETTINGS (PUT YOUR REAL DETAILS)
     const PAYSTACK_PUBLIC_KEY = "pk_live_81f40d98ac94ae1b0f27d8d03ba2b9549842194e"; 
-    const CUSTOMER_EMAIL = "Public customer@gmail.com";
+    const CUSTOMER_EMAIL = "ourpaymentfirst@gmail.com"; // ⚠️ MUST be real
 
-       function payWithPaystack() {
-    // Check if the Paystack library actually loaded
-    if (typeof PaystackPop === 'undefined') {
-        alert("Paystack library failed to load. Please check your internet connection or disable ad-blockers.");
-        return;
-    }
+    function payWithPaystack() {
 
-    const amountText = document.getElementById("amount").innerText;
-    const name = document.getElementById("customer-name").innerText;
-    
-    try {
+        const amountText = document.getElementById("amount").innerText.trim();
+        const name = document.getElementById("customer-name").innerText.trim();
+
+        const amount = Number(amountText) * 100;
+
+        // ✅ Validation (important for live)
+        if (!amount || amount <= 0) {
+            alert("Invalid amount");
+            return;
+        }
+
+        // ✅ Check Paystack loaded
+        if (typeof PaystackPop === "undefined") {
+            alert("Payment system not loaded. Check hosting.");
+            return;
+        }
+
         var handler = PaystackPop.setup({
             key: PAYSTACK_PUBLIC_KEY,
             email: CUSTOMER_EMAIL,
-            amount: parseFloat(amountText) * 100,
+            amount: amount,
             currency: "GHS",
-            ref: "MJ_" + Math.floor((Math.random() * 1000000000) + 1),
+
+            // 🔥 Better unique reference
+            ref: "TAP_" + Date.now(),
+
             metadata: {
                 custom_fields: [
                     {
@@ -274,23 +285,21 @@
                     }
                 ]
             },
+
             callback: function(response){
-                alert("Payment successful! Reference: " + response.reference);
+                alert("✅ Payment successful! Ref: " + response.reference);
+
+                // 🔥 Optional redirect after payment
+                window.location.href = "success.html?ref=" + response.reference;
             },
+
             onClose: function(){
-                alert("Payment window closed.");
+                console.log("Payment window closed");
             }
         });
+
         handler.openIframe();
-    } catch (error) {
-        console.error("Paystack Error:", error);
-        alert("An error occurred: " + error.message);
     }
-}
-
-
-    handler.openIframe();
-}
 </script>
 
 </body>
