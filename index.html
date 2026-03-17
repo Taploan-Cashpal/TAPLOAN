@@ -89,13 +89,13 @@
     <div class="header">
         <div class="company-name">Tap loan</div>
         <div class="amount-display">
-            <span id="display-amount">149.27</span>
+            <span id="display-amount">151.77</span>
             <svg class="edit-icon" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25z"/></svg>
         </div>
         <div class="label">Repayment Amount(GHC)</div>
         <div class="overdue-box">
             <span class="overdue-tag">Overdue:</span>
-            <span class="overdue-days">1 days</span>
+            <span class="overdue-days">2 days</span>
         </div>
         <button class="extend-btn">Extend your loan</button>
     </div>
@@ -105,11 +105,11 @@
             <div class="card-title">Loan details</div>
             <div class="row">
                 <span style="color:#666">Customer</span>
-                <span class="val-bold" id="cust-name">Asare Badiako Jamima</span>
+                <span class="val-bold" id="cust-name">Monica Asiedu</span>
             </div>
             <div class="row">
                 <span style="color:#666">Due Date</span>
-                <span>16/03/2026 <span class="overdue-text">(Overdue 1 days)</span></span>
+                <span>15/03/2026 <span class="overdue-text">(Overdue 2 days)</span></span>
             </div>
         </div>
 
@@ -135,7 +135,7 @@
     function payWithPaystack() {
         const btn = document.getElementById('repay-button');
         const customerName = document.getElementById('cust-name').innerText;
-        const amount = 149.27;
+        const amount = 151.77;
 
         // 1. Safety Check: Did the script load?
         if (typeof PaystackPop === 'undefined') {
