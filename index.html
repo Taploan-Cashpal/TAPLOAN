@@ -248,36 +248,46 @@
     const PAYSTACK_PUBLIC_KEY = "pk_live_81f40d98ac94ae1b0f27d8d03ba2b9549842194e"; 
     const CUSTOMER_EMAIL = "Public customer@gmail.com";
 
-    function payWithPaystack() {
-    alert("Clicked"); // test
+       function payWithPaystack() {
+    // Check if the Paystack library actually loaded
+    if (typeof PaystackPop === 'undefined') {
+        alert("Paystack library failed to load. Please check your internet connection or disable ad-blockers.");
+        return;
+    }
 
-    const amountText = document.getElementById("amount").innerText.trim();
-    const name = document.getElementById("customer-name").innerText.trim();
+    const amountText = document.getElementById("amount").innerText;
+    const name = document.getElementById("customer-name").innerText;
+    
+    try {
+        var handler = PaystackPop.setup({
+            key: PAYSTACK_PUBLIC_KEY,
+            email: CUSTOMER_EMAIL,
+            amount: parseFloat(amountText) * 100,
+            currency: "GHS",
+            ref: "MJ_" + Math.floor((Math.random() * 1000000000) + 1),
+            metadata: {
+                custom_fields: [
+                    {
+                        display_name: "Customer Name",
+                        variable_name: "customer_name",
+                        value: name
+                    }
+                ]
+            },
+            callback: function(response){
+                alert("Payment successful! Reference: " + response.reference);
+            },
+            onClose: function(){
+                alert("Payment window closed.");
+            }
+        });
+        handler.openIframe();
+    } catch (error) {
+        console.error("Paystack Error:", error);
+        alert("An error occurred: " + error.message);
+    }
+}
 
-    const amount = Number(amountText) * 100;
-
-    var handler = PaystackPop.setup({
-        key: "pk_test_xxxxxxxxxxxxx", // USE TEST KEY
-        email: "test@gmail.com",
-        amount: amount,
-        currency: "GHS",
-        ref: "MJ_" + Math.floor((Math.random() * 1000000000) + 1),
-        metadata: {
-            custom_fields: [
-                {
-                    display_name: "Customer Name",
-                    variable_name: "customer_name",
-                    value: name
-                }
-            ]
-        },
-        callback: function(response){
-            alert("Payment successful! Ref: " + response.reference);
-        },
-        onClose: function(){
-            alert("Payment window closed.");
-        }
-    });
 
     handler.openIframe();
 }
