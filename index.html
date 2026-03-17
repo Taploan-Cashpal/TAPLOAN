@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Repayment - Taploan</title>
+
+<!-- Paystack Script -->
+<script src="https://js.paystack.co/v1/inline.js"></script>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #3b99ff, #d0e8ff);
+}
+
+.header {
+    text-align: center;
+    padding: 40px 20px;
+    color: white;
+}
+
+.amount {
+    font-size: 60px;
+    font-weight: bold;
+}
+
+.container {
+    padding: 15px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.repay-btn {
+    background: #3b99ff;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h2>Taploan</h2>
+    <div class="amount" id="amount">149.27</div>
+    <p>Repayment Amount (GHS)</p>
+</div>
+
+<div class="container">
+
+    <div class="card">
+        <p><b>Customer:</b> <span id="name">Asare Badiako Jamima</span></p>
+        <p><b>Status:</b> Overdue</p>
+    </div>
+
+    <div class="card">
+        <button class="repay-btn" onclick="payNow()">Repay</button>
+    </div>
+
+</div>
+
+<script>
+function payNow() {
+
+    alert("Button clicked"); // DEBUG
+
+    const amountText = document.getElementById("amount").innerText.trim();
+    const name = document.getElementById("name").innerText.trim();
+
+    const amount = Number(amountText) * 100;
+
+    if (!amount || amount <= 0) {
+        alert("Invalid amount");
+        return;
+    }
+
+    if (typeof PaystackPop === "undefined") {
+        alert("Paystack failed to load. Check internet or hosting.");
+        return;
+    }
+
+    var handler = PaystackPop.setup({
+        key: "pk_live_81f40d98ac94ae1b0f27d8d03ba2b9549842194e", // 🔴 PUT YOUR LIVE KEY
+        email: "yourrealemail@gmail.com", // 🔴 USE REAL EMAIL
+        amount: amount,
+        currency: "GHS",
+        ref: "TXN_" + Date.now(),
+
+        metadata: {
+            custom_fields: [
+                {
+                    display_name: "Customer Name",
+                    variable_name: "customer_name",
+                    value: name
+                }
+            ]
+        },
+
+        callback: function(response) {
+            alert("✅ Payment Successful! Ref: " + response.reference);
+        },
+
+        onClose: function() {
+            alert("❌ Payment cancelled");
+        }
+    });
+
+    handler.openIframe();
+}
+</script>
+
+</body>
+</html>
